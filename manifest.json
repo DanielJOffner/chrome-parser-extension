@@ -1,0 +1,27 @@
+{
+  "manifest_version": 2,
+
+  "name": "QLD Court Calculator Assistant",
+  "description": "Court Calculator Assistant",
+  "version": "1.1.6",
+
+  "icons": {
+    "48": "extension-icon.png"
+  },
+
+  "permissions": [
+    "tabs", "<all_urls>"
+  ],
+
+  "browser_action": {
+    "default_icon": "extension-icon.png",
+    "default_popup": "./src/extension/popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.courts.qld.gov.au/courts-calculator/calculator*"],
+      "js": ["./src/injected-content-script/inject.js"],
+      "run_at": "document_end"
+    }
+  ]
+}
