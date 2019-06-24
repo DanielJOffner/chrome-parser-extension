@@ -55,9 +55,10 @@ The last item in the array is always a checksum of type 'checksum'
     // Payments alays appear in the same order
     function label_dishonours(array){
     	let i
-        for(i = 0; i < array.length; i++){
+        for(i = 0; i < array.length-1; i++){
         	if(array[i].type == 'dishonour payment'){
-            	array[i-1].type = 'dishonour payment'
+            	array[i+1].type = 'dishonour payment'
+                i++
             }
         }
         return array

@@ -17,7 +17,7 @@ function displayError(error){
 		display_error.innerHTML = "Error: failed to parse data"
 	}else{
 		display_error.className = "success"
-		display_error.innerHTML = `Success: checksum $${0}`, get_check_sum()
+		display_error.innerHTML = `Success: checksum $${get_check_sum()}`
 	}
 }
 

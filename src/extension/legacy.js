@@ -112,7 +112,7 @@ function convertToArray(){
 
 	//call functions to clean up payments and convert date format
 	cleanPayment(payments);
-	convertDateFormat(dates);
+	//convertDateFormat(dates);
 
 	//call function to send arrays to the content script running on the webpage
 	messageContentScript(payments);

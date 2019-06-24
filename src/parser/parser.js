@@ -1027,9 +1027,10 @@ function peg$parse(input, options) {
       // Payments alays appear in the same order
       function label_dishonours(array){
       	let i
-          for(i = 0; i < array.length; i++){
+          for(i = 0; i < array.length-1; i++){
           	if(array[i].type == 'dishonour payment'){
-              	array[i-1].type = 'dishonour payment'
+              	array[i+1].type = 'dishonour payment'
+                  i++
               }
           }
           return array
@@ -1073,11 +1074,7 @@ function peg$parse(input, options) {
   }
 }
 
-// Node.js syntax
-// module.exports = {
-//   SyntaxError: peg$SyntaxError,
-//   parse:       peg$parse
-// };
-
-// Vanilla syntax 
-window.PARSER = peg$parse
+module.exports = {
+  SyntaxError: peg$SyntaxError,
+  parse:       peg$parse
+};

@@ -3,7 +3,7 @@
 
   "name": "QLD Court Calculator Assistant",
   "description": "Court Calculator Assistant",
-  "version": "1.1.6",
+  "version": "1.1.9",
 
   "icons": {
     "48": "extension-icon.png"
