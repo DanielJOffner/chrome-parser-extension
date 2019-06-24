@@ -1074,7 +1074,10 @@ function peg$parse(input, options) {
   }
 }
 
-module.exports = {
-  SyntaxError: peg$SyntaxError,
-  parse:       peg$parse
-};
+// module.exports = {
+//   SyntaxError: peg$SyntaxError,
+//   parse:       peg$parse
+// };
+
+
+window.PARSER = peg$parse
