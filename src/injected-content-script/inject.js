@@ -48,6 +48,7 @@ chrome.runtime.onMessage.addListener(function(message){
 		if(input[0] == "new-payments"){
 			input.shift() // Remove head
 			input.pop() // Remove checksum
+			input.reverse() // revese order (so that least recent payments are first)
 			auto_fill_form(input)
 		}
 	}catch (e) {
