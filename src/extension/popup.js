@@ -1,6 +1,7 @@
 const parse = PARSER 
 const input = document.querySelector('#input')
 const go_button = document.querySelector('#go_button')
+const download_button = document.querySelector('#download_btn')
 const display_error = document.querySelector('#error')
 
 // Global array to store payments data
@@ -13,9 +14,11 @@ function clear_payments(){ payments = [] }
 // Tell the user if the parser was succesful or not
 function displayError(error){
 	if(error){
+		download_button.style.display = "block"
 		display_error.className = "error";
 		display_error.innerHTML = "Error: failed to parse data"
 	}else{
+		download_button.style.display = "block"
 		display_error.className = "success"
 		display_error.innerHTML = `Success: checksum $${get_check_sum()}`
 	}
@@ -42,7 +45,14 @@ input.addEventListener('input', (e) =>{
 })
 
 // Listens for events on the go button
-go_button.addEventListener('click', (e) =>{ messageContentScript() })
+go_button.addEventListener('click', (e) =>{ 
+	messageContentScript() 
+})
+
+// Listens for events on the download button
+download_button.addEventListener('click', (e) => {
+	downloadToCVS()
+})
 
 // function to send Array to content script 'injected.js'
 // the content script expects incomming messages to be an array where the first el
@@ -79,4 +89,22 @@ function fill_dummy_data(){
 		type: "checksum",
 		value: 10.40
 	}]
+}
+
+function downloadToCVS(){
+	var blob = new Blob(["Column1", ","," Column2"], {type: "text/csv"});
+	var url = URL.createObjectURL(blob);
+	chrome.downloads.download({
+		url: url // The object URL can be used as download URL
+	//...
+	});
+	//window.alert("testing download")
+	// navigator.clipboard.writeText('Text to be copied')
+	// .then(() => {
+	// 	console.log('Text copied to clipboard');
+	// })
+	// .catch(err => {
+	// 	// This can happen if the user denies clipboard permissions:
+	// 	console.error('Could not copy text: ', err);
+	// });
 }
