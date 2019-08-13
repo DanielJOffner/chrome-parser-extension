@@ -1028,9 +1028,15 @@ function peg$parse(input, options) {
       function label_dishonours(array){
       	let i
           for(i = 0; i < array.length-1; i++){
-          	if(array[i].type == 'dishonour payment'){
+          	// check for dis payment -> payment (single)
+          	if(array[i].type == 'dishonour payment' && array[i+1].type == 'payment'){
               	array[i+1].type = 'dishonour payment'
                   i++
+              } // check for dis payment -> dis payment -> payment -> payment(double)
+              else if(array[i].type == 'dishonour payment' && array[i+1].type == 'dishonour payment'){
+              	array[i+2].type = 'dishonour payment'
+                  array[i+3].type = 'dishonour payment'
+                  i += 3
               }
           }
           return array

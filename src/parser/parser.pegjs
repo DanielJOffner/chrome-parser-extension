@@ -56,12 +56,23 @@ The last item in the array is always a checksum of type 'checksum'
     function label_dishonours(array){
     	let i
         for(i = 0; i < array.length-1; i++){
-        	if(array[i].type == 'dishonour payment'){
+        	// check for dis payment -> payment (single)
+        	if(array[i].type == 'dishonour payment' && array[i+1].type == 'payment'){
             	array[i+1].type = 'dishonour payment'
                 i++
+            } // check for dis payment -> dis payment -> payment -> payment(double)
+            else if(array[i].type == 'dishonour payment' && array[i+1].type == 'dishonour payment'){
+            	array[i+2].type = 'dishonour payment'
+                array[i+3].type = 'dishonour payment'
+                i += 3
             }
         }
         return array
+    }
+    
+    // Label dishonour payment 
+    function label_dishonour(){
+    	
     }
     
     // Remove dishonours

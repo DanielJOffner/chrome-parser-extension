@@ -15,16 +15,24 @@ function clear_payments(){ payments = [] }
 // Tell the user if the parser was succesful or not
 function displayError(error){
 	if(error){
-		download_button.style.display = "none"
-		copy_button.style.display = "none"
+		hideExportOptions()
 		display_error.className = "error";
 		display_error.innerHTML = "Error: failed to parse data"
 	}else{
-		download_button.style.display = "inline-block"
-		copy_button.style.display = "inline-block"
+		displayExportOptions()
 		display_error.className = "success"
 		display_error.innerHTML = `Success: checksum $${get_check_sum()}`
 	}
+}
+
+function displayExportOptions(){
+	download_button.style.display = "inline-block"
+	copy_button.style.display = "inline-block"
+}
+
+function hideExportOptions(){
+	download_button.style.display = "none"
+	copy_button.style.display = "none"
 }
 
 
