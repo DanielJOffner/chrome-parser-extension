@@ -2,6 +2,7 @@ const parse = PARSER
 const input = document.querySelector('#input')
 const go_button = document.querySelector('#go_button')
 const download_button = document.querySelector('#download_btn')
+const copy_button = document.querySelector('#copy_btn')
 const display_error = document.querySelector('#error')
 
 // Global array to store payments data
@@ -14,11 +15,13 @@ function clear_payments(){ payments = [] }
 // Tell the user if the parser was succesful or not
 function displayError(error){
 	if(error){
-		download_button.style.display = "block"
+		download_button.style.display = "none"
+		copy_button.style.display = "none"
 		display_error.className = "error";
 		display_error.innerHTML = "Error: failed to parse data"
 	}else{
-		download_button.style.display = "block"
+		download_button.style.display = "inline-block"
+		copy_button.style.display = "inline-block"
 		display_error.className = "success"
 		display_error.innerHTML = `Success: checksum $${get_check_sum()}`
 	}
@@ -54,6 +57,12 @@ download_button.addEventListener('click', (e) => {
 	downloadToCVS()
 })
 
+
+// Listens for events on the copy button
+copy_button.addEventListener('click', (e) => {
+	copyToClipboard()
+})
+
 // function to send Array to content script 'injected.js'
 // the content script expects incomming messages to be an array where the first el
 // is an identifier about what type of data is incoming.
@@ -63,6 +72,58 @@ function messageContentScript(){
 		chrome.tabs.sendMessage(tabs[0].id, payments);
 	});
 }
+
+function downloadToCVS(){
+	let csvArray = genCSVArray()
+	let blob = new Blob(csvArray, {type: "text/csv"});
+	let url = URL.createObjectURL(blob);
+	chrome.downloads.download({
+		url: url 
+	});
+}
+
+function copyToClipboard(){
+	navigator.clipboard.writeText(genClipboardText())
+	.then(() => {
+		console.log('Text copied to clipboard');
+	})
+	.catch(err => {
+		// This can happen if the user denies clipboard permissions:
+		console.error('Could not copy text: ', err);
+	});
+}
+
+
+// Returns an array with the format
+// ["Amount", ",", "Date", "\n"]
+function genCSVArray(){
+	let csvArray = []
+	csvArray.push("Date",",","Amount","\n")
+	payments.forEach(payment => {
+		if(payment.type == "payment"){
+			csvArray.push(
+				payment.date,
+				",",
+				payment.amount,
+				"\n"
+			)
+		}
+	});
+	return csvArray
+}
+
+function genClipboardText(){
+	let clipboardText = ""
+	payments.forEach(payment =>{
+		if(payment.type == "payment"){
+			amount = payment.amount
+			date = payment.date
+			clipboardText += `${date}\t${amount}\n`
+		}
+	})
+	return clipboardText
+}
+
 
 
 // Dummy data for testing only
@@ -89,22 +150,4 @@ function fill_dummy_data(){
 		type: "checksum",
 		value: 10.40
 	}]
-}
-
-function downloadToCVS(){
-	var blob = new Blob(["Column1", ","," Column2"], {type: "text/csv"});
-	var url = URL.createObjectURL(blob);
-	chrome.downloads.download({
-		url: url // The object URL can be used as download URL
-	//...
-	});
-	//window.alert("testing download")
-	// navigator.clipboard.writeText('Text to be copied')
-	// .then(() => {
-	// 	console.log('Text copied to clipboard');
-	// })
-	// .catch(err => {
-	// 	// This can happen if the user denies clipboard permissions:
-	// 	console.error('Could not copy text: ', err);
-	// });
 }
